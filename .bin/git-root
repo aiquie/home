@@ -1,0 +1,4 @@
+#!/bin/sh
+
+CMD_NAME=$(basename $0) GIT_DIR=$HOME/github/root/.git GIT_WORK_TREE=/ exec git-chwt "$@"
+

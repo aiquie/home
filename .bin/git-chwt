@@ -1,0 +1,25 @@
+#!/bin/sh
+
+[ -z $GIT_DIR       ] && echo "error: repositary is not set in GIT_DIR"         && exit 2;
+[ -z $GIT_WORK_TREE ] && echo "error: working tree is not set in GIT_WORK_TREE" && exit 2;
+
+if [ $# -eq 0 ]; then
+    [ -z $CMD_NAME ] && CMD_NAME=$(basename $0)
+
+    REPO_DIR=$(dirname $GIT_DIR)
+    REPO_NAME=$(basename $REPO_DIR)
+
+    echo "$CMD_NAME is alias for git with defined GIT_DIR and GIT_WORK_TREE"
+    echo ""
+    echo "for use:"
+    echo "$ git clone git@github.com:aiquie/${REPO_NAME}.git $REPO_DIR"
+    echo "$ $CMD_NAME config status.showUntrackedFiles no"
+
+    exit 1
+fi
+
+[ ! -d $GIT_DIR       ] && echo "error: repository \"$GIT_DIR\" does not exist"         && exit 3
+[ ! -d $GIT_WORK_TREE ] && echo "error: working tree \"$GIT_WORK_TREE\" does not exist" && exit 3
+
+exec git "$@"
+
