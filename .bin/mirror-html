@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PAGE_URL="$@"
+HTML_URL="$@"
 
 [ -n "${MIRROR_PATH}" ] && MIRROR_PATH="."
 
@@ -13,5 +13,5 @@ wget                                    \
     --page-requisites                   \
     --directory-prefix="${MIRROR_PATH}" \
     --reject "robots.txt"               \
-    ${PAGE_URL}
+    ${HTML_URL}
 
