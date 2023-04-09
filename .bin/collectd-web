@@ -1,0 +1,40 @@
+#!/bin/bash
+
+D="/tmp"
+S="http://localhost:9980"
+
+C="${S}/collectd/cgi-bin/collection.modified.cgi"
+
+N=$(basename $0)
+
+[[ $1 == -h || $1 == --help ]] &&
+    echo "usage:  ${N} [regex] [h|d|w|m|y]" &&
+    echo "output: list of metrics or graph files" &&
+    exit 1
+
+R="$1"
+
+case ${2:-d} in
+    h) T='hour' ;;
+    d) T='day'  ;;
+    w) T='week' ;;
+    m) T='month';;
+    y) T='year' ;;
+
+    *) echo "error: not correct time span" && exit 2 ;;
+esac
+
+curl -s "${C}?action=hostlist_json" | jq -r '.[]' |
+    while read H; do
+        curl -s "${C}?action=pluginlist_json&host=${H}" | jq -r "\"${H} \" + .[]" | grep "${R}" |
+            while read H P; do
+                test -z ${R} && echo "${H} ${P}" && continue
+                curl -s "${C}?action=graphs_json&host=${H}&plugin=${P}" | jq -r ".${T} | .[]" |
+                    while read L; do
+                        I=$(echo $L | sed -e 's/[/;][^=]*=/./g' -e "s/\.show_graph//")
+                        F=${D}/${N}${I}.$(date -Iseconds).png
+                        curl -s "${S}${L}" -o ${F} && echo ${F}
+                    done
+            done
+    done
+
