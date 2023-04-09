@@ -1,0 +1,5 @@
+#!/bin/sh
+
+TGBB_HOME="/var/lib/telegram-bot-bash"
+
+BASHBOT_HOME=${TGBB_HOME} ${TGBB_HOME}/bin/send_file.sh BOTADMIN "$@"
