@@ -4,14 +4,14 @@ TZ=$(curl -sf https://ipapi.co/timezone)
 
 test -n "$TZ" && echo "$TZ" &&
     (
-        test -x "$(command -v timedatectl)"    && timedatectl set-timezone $TZ ||
-        test -x "$(command -v setup-timezone)" && setup-timezone -i $TZ
+        ( test -x "$(command -v timedatectl)"    && timedatectl set-timezone $TZ ) ||
+        ( test -x "$(command -v setup-timezone)" && setup-timezone -i $TZ )
     )
 
 TS="pool.ntp.org"
 
-test -x "$(command -v ntpdate)" && ntpdate $TS ||
-test -x "$(command -v busybox)" && busybox ntpd -dnqp $TS
+( test -x "$(command -v ntpdate)" && ntpdate $TS ) ||
+( test -x "$(command -v busybox)" && busybox ntpd -dnqp $TS )
 
 hwclock -w
 
