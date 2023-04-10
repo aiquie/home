@@ -8,18 +8,19 @@ C="${S}/collectd/cgi-bin/collection.modified.cgi"
 N=$(basename $0)
 
 [[ $1 == -h || $1 == --help ]] &&
-    echo "usage:  ${N} [regex] [h|d|w|m|y]" &&
+    echo "usage:  ${N} [regex] [h|d|w|m|y|t]" &&
     echo "output: list of metrics or graph files" &&
     exit 1
 
 R="$1"
 
 case ${2:-d} in
-    h) T='hour' ;;
-    d) T='day'  ;;
-    w) T='week' ;;
-    m) T='month';;
-    y) T='year' ;;
+    h) T='hour'   ;;
+    d) T='day'    ;;
+    w) T='week'   ;;
+    m) T='month'  ;;
+    y) T='year'   ;;
+    t) T='decade' ;;
 
     *) echo "error: not correct time span" && exit 2 ;;
 esac
