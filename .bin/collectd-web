@@ -1,7 +1,7 @@
 #!/bin/bash
 
 D="/tmp"
-S="http://localhost:9980"
+S="http://n900:9980"
 
 C="${S}/collectd/cgi-bin/collection.modified.cgi"
 
