@@ -13,5 +13,5 @@ TS="pool.ntp.org"
 ( test -x "$(command -v ntpdate)" && ntpdate $TS ) ||
 ( test -x "$(command -v busybox)" && busybox ntpd -dnqp $TS )
 
-hwclock -w
+hwclock -w "$@"
 
