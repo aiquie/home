@@ -1,0 +1,9 @@
+#!/bin/sh
+
+TGBB_HOME="/var/lib/telegram-bot-bash"
+
+test ! -d $TGBB_HOME &&  echo "error: $(basename $TGBB_HOME) does not exist" && exit 1
+
+[[ $# -eq 0 ]] && FORM=stdin
+
+BASHBOT_HOME=${TGBB_HOME} ${TGBB_HOME}/bin/send_message.sh $FORM BOTADMIN "$@"
