@@ -2,5 +2,5 @@
 
 HOST=$1
 
-tgbb-mesg "motion alert!"
+tgbb-send "motion alert!"
 

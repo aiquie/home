@@ -1,0 +1,14 @@
+#!/bin/sh
+
+TGBB_HOME="/var/lib/telegram-bot-bash"
+
+test ! -d $TGBB_HOME &&  echo "error: $(basename $TGBB_HOME) does not exist" && exit 1
+
+cd ${TGBB_HOME}
+
+if [ -f "$1" ]; then
+    ./bin/send_file.sh BOTADMIN "$1" "$2" "$3" "normal"
+else
+    ./bin/send_message.sh BOTADMIN "$1" "normal"
+fi | grep -q '^\["OK"\]\t"true"$'
+
