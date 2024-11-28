@@ -1,0 +1,35 @@
+#!/bin/sh
+
+HOST="narodmon.ru"
+PORT=8283
+
+MAC="$(cat /sys/class/net/wlan0/address)"
+NAM="$(hostname)"
+
+DIR="/var/lib/collectd/aggr/meteo-average"
+DUR=20m
+
+stor() {
+    case $1 in
+    "TEMP") echo "temperature" ;;
+    "HUMD") echo "humidity"    ;;
+    "PRES") echo "pressure"    ;;
+    "LGHT") echo "illuminance" ;;
+    esac
+}
+
+value() {
+    rrdtool fetch "$DIR/$(stor $1).rrd" LAST -s -$DUR | awk '$2 != "nan" { val = $2 } END{ if(val) printf "%.1f\n", val; }'
+}
+
+for SENS in TEMP HUMD PRES LGHT; do
+    VALU=$(value $SENS)
+    test -n "$VALU" && DATA=$DATA"#$SENS#$VALU\n"
+done
+
+echo -n "$(date +"%F %T") $(echo $DATA | sed 's/\\n/ /g')"
+
+test -z "$DATA" && echo && exit 1 
+
+echo -e "#$MAC#$NAM\n$DATA##" | socat -t1 - TCP:$HOST:$PORT
+
